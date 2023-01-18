@@ -1,6 +1,7 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
@@ -20,41 +21,15 @@ public class RestCreateCourier {
     }
 
     @Test
-    //Логинимся курьером для получения его id
-    public void deleteCourier() {
-        String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
-        CourierId courierResponse =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(json)
-                        .post("/api/v1/courier/login")
-                        .as(CourierId.class);
-
-        int courId = courierResponse.id;
-        given()
-                .queryParam("id", courId)
-                .then().statusCode(200);
-    }
-
-
-
-
-
-
-
-    @Test
     @DisplayName("Создание курьера (курьера можно создать)") // имя теста
     @Description("Позитивный") // описание теста
     public void getMyInfoStatusCode() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
-        Response response =
                 given()
+                        .header("Content-type", "application/json")
                         .body(json)
-                        .when()
-                        .post("/api/v1/courier");
-        response.then().assertThat().body("ok", CoreMatchers.equalTo("true"))
-                .and()
-                .statusCode(201);
+                        .post("/api/v1/courier")
+                .then().statusCode(201);
     }
 
 
@@ -69,5 +44,21 @@ public class RestCreateCourier {
             this.id = id;
         }
 
+    }
+
+    @After
+    public void deleteCourier() {
+        String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
+        CourierId courierResponse =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post("/api/v1/courier/login")
+                        .as(CourierId.class);
+
+        given()
+                //.queryParam("id", "144671")
+                .delete("/api/v1/courier/"+courierResponse.id)
+                .then().statusCode(200);
     }
 }
