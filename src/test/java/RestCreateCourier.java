@@ -20,19 +20,26 @@ public class RestCreateCourier {
     }
 
     @Test
-    public void getCourierId() {
+    //Логинимся курьером для получения его id
+    public void deleteCourier() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
-        CourierId courierId =
-                 given()
-                 .header("Content-type", "application/json")
-                 .body(json)
-                 .post("/api/v1/courier/login")
-                 .as(CourierId.class);
+        CourierId courierResponse =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post("/api/v1/courier/login")
+                        .as(CourierId.class);
 
-        System.out.println(courierId.id);
-
-
+        int courId = courierResponse.id;
+        given()
+                .queryParam("id", courId)
+                .then().statusCode(200);
     }
+
+
+
+
+
 
 
     @Test
