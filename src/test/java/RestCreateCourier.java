@@ -10,11 +10,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class RestCreateCourier {
-
+    public String endpoint = "/api/v1/courier/";
 
     @Before
     public void setUp() {
-
+        //Устанавливаем адрес сайта
         RestAssured.baseURI= "http://qa-scooter.praktikum-services.ru";
     }
 
@@ -27,7 +27,7 @@ public class RestCreateCourier {
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
         response.then().assertThat().body("ok", equalTo(true))
                 .and()
                 .statusCode(201);
@@ -42,7 +42,7 @@ public class RestCreateCourier {
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
         responseFirstCourier.then().assertThat().body("ok", equalTo(true))
                 .and()
                 .statusCode(201);
@@ -50,7 +50,7 @@ public class RestCreateCourier {
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
         responseSecondCourier.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
                 .and()
                 .statusCode(409);
@@ -65,7 +65,7 @@ public class RestCreateCourier {
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
         response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
                 .statusCode(400);
@@ -79,14 +79,14 @@ public class RestCreateCourier {
                 given()
                         .header("Content-type", "application/json")
                         .body(jsonFirstCourier)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
 
         String jsonSecondCourier = "{\"login\": \"AutoTestCourier\", \"password\": \"qwerty\", \"firstName\": \"Владимир\"}";
         Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(jsonSecondCourier)
-                        .post("/api/v1/courier");
+                        .post(endpoint);
         response.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
                 .and()
                 .statusCode(409);
@@ -104,11 +104,11 @@ public class RestCreateCourier {
                         .as(CourierId.class);
         //Удаление курьера через его id
         given()
-                .delete("/api/v1/courier/" + courierResponse.id);
+                .delete(endpoint + courierResponse.id);
     }
 
     public static class CourierId {
-        private int id;
+        public int id;
         public int getId() {
             return id;
         }
