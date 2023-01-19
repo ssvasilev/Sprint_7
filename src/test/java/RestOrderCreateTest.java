@@ -1,5 +1,4 @@
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.put;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;

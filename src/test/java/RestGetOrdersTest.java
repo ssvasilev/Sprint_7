@@ -1,15 +1,13 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
 import io.qameta.allure.Description; // импорт Description
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class RestGetOrders {
+public class RestGetOrdersTest {
     private String endpoint = "/api/v1/orders";
 
     @Before

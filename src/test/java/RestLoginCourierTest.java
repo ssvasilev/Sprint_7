@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class RestLoginCourier {
+public class RestLoginCourierTest {
 
     //Тестируемый эндпойнт
     private String endpoint = "/api/v1/courier/login/";
@@ -82,13 +82,13 @@ public class RestLoginCourier {
     @After
     public void deleteCourier() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
-        RestCreateCourier.CourierId courierResponse =
+        RestCreateCourierTest.CourierId courierResponse =
                 //Логин курьером, что бы получить его id
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
                         .post("/api/v1/courier/login")
-                        .as(RestCreateCourier.CourierId.class);
+                        .as(RestCreateCourierTest.CourierId.class);
         //Удаление курьера через его id
         given()
                 .delete("/api/v1/courier/" + courierResponse.id);

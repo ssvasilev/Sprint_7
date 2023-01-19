@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 
-public class RestCreateCourier {
+public class RestCreateCourierTest {
 
     //Тестируемый эндпойнт
     public String endpoint = "/api/v1/courier/";
