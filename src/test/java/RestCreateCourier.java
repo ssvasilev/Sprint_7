@@ -8,11 +8,11 @@ import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
 import io.qameta.allure.Description; // импорт Description
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class RestCreateCourier {
 
-    String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzc3NzQwMjJkMTM2ZDAwM2RkODBkNTciLCJpYXQiOjE2NzM3ODE3NDcsImV4cCI6MTY3NDM4NjU0N30.ODkAuVhkGSLxdtW5_NiBvXbJiDLDUseIHp7rfZ-6XgA";
 
     @Before
     public void setUp() {
@@ -22,43 +22,101 @@ public class RestCreateCourier {
 
     @Test
     @DisplayName("Создание курьера (курьера можно создать)") // имя теста
-    @Description("Позитивный") // описание теста
-    public void getMyInfoStatusCode() {
+    @Description("успешный запрос возвращает ok: true") // описание теста
+    public void restCreateCourier() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
+        Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier")
-                .then().statusCode(201);
+                        .post("/api/v1/courier");
+        response.then().assertThat().body("ok", equalTo(true))
+                .and()
+                .statusCode(201);
     }
 
+    @Test
+    @DisplayName("Создание курьера (нельзя создать двух одинаковых курьеров)") // имя теста
+    @Description("Негативный") // описание теста
+    public void restDobleCreateCourierFail() {
+        String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
+        Response responseFirstCourier =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post("/api/v1/courier");
+        responseFirstCourier.then().assertThat().body("ok", equalTo(true))
+                .and()
+                .statusCode(201);
+        Response responseSecondCourier =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post("/api/v1/courier");
+        responseSecondCourier.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
+                .and()
+                .statusCode(409);
+    }
 
-    public class CourierId {
-        private int id;
+    @Test
+    @DisplayName("Создание курьера (чтобы создать курьера, нужно передать в ручку все обязательные поля)") // имя теста
+    @Description("если одного из полей нет, запрос возвращает ошибку") // описание теста
+    public void restAllFieldsAreRequired() {
+        String json = "{\"login\": \"AutoTestCourier\", \"firstName\": \"Иван\"}";
+        Response response =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post("/api/v1/courier");
+        response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
+                .and()
+                .statusCode(400);
+    }
 
-        public int getId() {
-            return id;
-        }
+    @Test
+    @DisplayName("Создание курьера (если создать пользователя с логином, который уже есть, возвращается ошибка.)") // имя теста
+    @Description("Негативный") // описание теста
+    public void restFailCreateDobleLoginCourier() {
+        String jsonFirstCourier = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
+                given()
+                        .header("Content-type", "application/json")
+                        .body(jsonFirstCourier)
+                        .post("/api/v1/courier");
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
+        String jsonSecondCourier = "{\"login\": \"AutoTestCourier\", \"password\": \"qwerty\", \"firstName\": \"Владимир\"}";
+        Response response =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(jsonSecondCourier)
+                        .post("/api/v1/courier");
+        response.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."))
+                .and()
+                .statusCode(409);
     }
 
     @After
     public void deleteCourier() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
         CourierId courierResponse =
+                //Логин курьером, что бы получить его id
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
                         .post("/api/v1/courier/login")
                         .as(CourierId.class);
-
+        //Удаление курьера через его id
         given()
-                //.queryParam("id", "144671")
-                .delete("/api/v1/courier/"+courierResponse.id)
-                .then().statusCode(200);
+                .delete("/api/v1/courier/" + courierResponse.id);
+    }
+
+    public class CourierId {
+        private int id;
+        public int getId() {
+            return id;
+        }
+        public void setId(int id) {
+            this.id = id;
+        }
+
     }
 }
