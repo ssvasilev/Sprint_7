@@ -10,6 +10,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class RestCreateCourier {
+
+    //Тестируемый эндпойнт
     public String endpoint = "/api/v1/courier/";
 
     @Before
@@ -104,7 +106,7 @@ public class RestCreateCourier {
                         .as(CourierId.class);
         //Удаление курьера через его id
         given()
-                .delete(endpoint + courierResponse.id);
+                .delete("/api/v1/courier/" + courierResponse.id);
     }
 
     public static class CourierId {

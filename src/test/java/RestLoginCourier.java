@@ -11,6 +11,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class RestLoginCourier {
+
+    //Тестируемый эндпойнт
+    public String endpoint = "/api/v1/courier/login/";
+
     @Before
     public void setUp() {
         //Устанавливаем адрес сайта
@@ -31,14 +35,14 @@ public class RestLoginCourier {
 
     @Test
     @DisplayName("Логин курьера (курьер может авторизоваться)") // имя теста
-    @Description("Позитивный") // описание теста
+    @Description("успешный запрос возвращает id") // описание теста
     public void restLoginSuccess() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\"}";
         Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier/login");
+                        .post(endpoint);
         response.then().assertThat().body("id", notNullValue())
                 .and()
                 .statusCode(200);
@@ -46,20 +50,33 @@ public class RestLoginCourier {
 
     @Test
     @DisplayName("Логин курьера (для авторизации нужно передать все обязательные поля)") // имя теста
-    @Description("Позитивный") // описание теста
+    @Description("если какого-то поля нет, запрос возвращает ошибку") // описание теста
     public void restAllFieldRequired() {
         String json = "{\"password\": \"1234\"}";
         Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(json)
-                        .post("/api/v1/courier/login");
+                        .post(endpoint);
         response.then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
                 .and()
                 .statusCode(400);
     }
 
-
+    @Test
+    @DisplayName("Логин курьера (система вернёт ошибку, если неправильно указать логин или пароль;)") // имя теста
+    @Description("если авторизоваться под несуществующим пользователем, запрос возвращает ошибку") // описание теста
+    public void restErrorPasswordFailLogin() {
+        String json = "{\"login\": \"AutoTestCourier\", \"password\": \"qwerty\"}";
+        Response response =
+                given()
+                        .header("Content-type", "application/json")
+                        .body(json)
+                        .post(endpoint);
+        response.then().assertThat().body("message", equalTo("Учетная запись не найдена"))
+                .and()
+                .statusCode(404);
+    }
 
 
 
