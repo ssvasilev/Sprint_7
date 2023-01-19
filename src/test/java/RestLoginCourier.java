@@ -1,4 +1,3 @@
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
@@ -13,7 +12,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 public class RestLoginCourier {
 
     //Тестируемый эндпойнт
-    public String endpoint = "/api/v1/courier/login/";
+    private String endpoint = "/api/v1/courier/login/";
 
     @Before
     public void setUp() {

@@ -1,7 +1,6 @@
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static io.restassured.RestAssured.put;
 import static org.hamcrest.CoreMatchers.notNullValue;
-
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
@@ -12,9 +11,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class RestCreateOrder {
+public class RestOrderCreateTest {
     //Тестируемый эндпойнт
-    public String endpoint = "/api/v1/orders";
+    private String endpoint = "/api/v1/orders";
 
         private final String firstNameSet;
         private final String lastNameSet;
@@ -26,7 +25,7 @@ public class RestCreateOrder {
         private final String commentSet;
         private final String colorSet;
 
-        public RestCreateOrder(String firstNameSet, String lastNameSet, String addressSet, String metroStationSet, String phoneSet, String rentTimeSet, String deliveryDateSet, String commentSet, String colorSet) {
+        public RestOrderCreateTest(String firstNameSet, String lastNameSet, String addressSet, String metroStationSet, String phoneSet, String rentTimeSet, String deliveryDateSet, String commentSet, String colorSet) {
             this.firstNameSet = firstNameSet;
             this.lastNameSet = lastNameSet;
             this.addressSet = addressSet;
@@ -59,7 +58,7 @@ public class RestCreateOrder {
     @Test
     @DisplayName("Создание заказа (Параметризованный)") // имя теста
     @Description("Параметры учитывают все варианты из задания") // описание теста
-    public void restCreateCourier() {
+    public void restCreateOrder() {
         //Собираем из тестовых данных JSON, который послужит телом для запроса.
         String json = "{" +
                 "\"firstName\":\"" + firstNameSet + "\"," +
@@ -83,6 +82,19 @@ public class RestCreateOrder {
                 .then().assertThat().body("track", notNullValue())
                 .and()
                 .statusCode(201); //Проверяем, что код ответа = 201
+
+    }
+
+
+    public static class OrderId {
+        public int track;
+        public int getTrack() {
+            return track;
+        }
+        public void setTrack(int track) {
+            this.track = track;
+        }
+
     }
 
 }
