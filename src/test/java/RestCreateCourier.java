@@ -1,15 +1,13 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
 import io.qameta.allure.Description; // импорт Description
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
+
 
 public class RestCreateCourier {
 
@@ -38,7 +36,7 @@ public class RestCreateCourier {
     @Test
     @DisplayName("Создание курьера (нельзя создать двух одинаковых курьеров)") // имя теста
     @Description("Негативный") // описание теста
-    public void restDobleCreateCourierFail() {
+    public void restDoubleCreateCourierFail() {
         String json = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
         Response responseFirstCourier =
                 given()
@@ -76,7 +74,7 @@ public class RestCreateCourier {
     @Test
     @DisplayName("Создание курьера (если создать пользователя с логином, который уже есть, возвращается ошибка.)") // имя теста
     @Description("Негативный") // описание теста
-    public void restFailCreateDobleLoginCourier() {
+    public void restFailCreateDoubleLoginCourier() {
         String jsonFirstCourier = "{\"login\": \"AutoTestCourier\", \"password\": \"1234\", \"firstName\": \"Иван\"}";
                 given()
                         .header("Content-type", "application/json")
@@ -109,7 +107,7 @@ public class RestCreateCourier {
                 .delete("/api/v1/courier/" + courierResponse.id);
     }
 
-    public class CourierId {
+    public static class CourierId {
         private int id;
         public int getId() {
             return id;
