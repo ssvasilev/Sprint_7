@@ -10,8 +10,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class RestLoginCourierTest extends BaseApi {
 
-    //Тестируемый эндпойнт
-    private String endpoint = "/api/v1/courier/login/";
 
     @Before
     public void createTestData() {
