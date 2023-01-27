@@ -1,18 +1,14 @@
-import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
-public class RestOrderCreateTest {
-    //Тестируемый эндпойнт
-    private String endpoint = "/api/v1/orders";
+public class RestOrderCreateTest extends BaseApi  {
 
         private final String firstNameSet;
         private final String lastNameSet;
@@ -48,12 +44,6 @@ public class RestOrderCreateTest {
             };
         }
 
-    @Before
-    public void setUp() {
-        //Устанавливаем адрес сайта
-        RestAssured.baseURI= "http://qa-scooter.praktikum-services.ru";
-    }
-
     @Test
     @DisplayName("Создание заказа (Параметризованный)") // имя теста
     @Description("Параметры учитывают все варианты из задания") // описание теста
@@ -70,30 +60,17 @@ public class RestOrderCreateTest {
                 "\"comment\":\"" + commentSet + "\"," +
                 "\"color\":" + colorSet +
                 "}";
-        Response response =
-                //Отправляем запрос
-                given()
-                        .header("Content-type", "text/plain")
-                        .body(json)
-                        .post(endpoint);
+
+        //Отправляем запрос
+                Response response = OrderApi.createOrder(json);
         //Проверяем, что в ответе содержится track и оно не пустое.
         response
                 .then().assertThat().body("track", notNullValue())
                 .and()
-                .statusCode(201); //Проверяем, что код ответа = 201
+                .statusCode(SC_CREATED); //Проверяем, что код ответа = 201
 
     }
 
 
-    public static class OrderId {
-        public int track;
-        public int getTrack() {
-            return track;
-        }
-        public void setTrack(int track) {
-            this.track = track;
-        }
-
-    }
 
 }
