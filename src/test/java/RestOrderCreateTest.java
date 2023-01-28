@@ -6,9 +6,11 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import requests.BaseTest;
+import requests.OrderApi;
 
 @RunWith(Parameterized.class)
-public class RestOrderCreateTest extends BaseApi  {
+public class RestOrderCreateTest extends BaseTest {
 
         private final String firstNameSet;
         private final String lastNameSet;

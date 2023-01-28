@@ -3,13 +3,16 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Test;
+import requests.BaseTest;
+import requests.CourierApi;
+
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 
 
 
-public class CreateCourierTest extends BaseApi {
+public class CreateCourierTest extends BaseTest {
 
 
     @Test
@@ -38,7 +41,7 @@ public class CreateCourierTest extends BaseApi {
     @DisplayName("Создание курьера (чтобы создать курьера, нужно передать в ручку все обязательные поля)") // имя теста
     @Description("если одного из полей нет, запрос возвращает ошибку") // описание теста
     public void restAllFieldsAreRequired() {
-        Response response = CourierApi.createCourier("AutoTestCourier","Иван");
+        Response response = CourierApi.createCourier("Иван");
         response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"))
                 .and()
                 .statusCode(SC_BAD_REQUEST);

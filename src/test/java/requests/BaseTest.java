@@ -1,9 +1,13 @@
+package requests;
+
 import io.restassured.RestAssured;
 import org.junit.Before;
 
+import java.net.URI;
+
 import static io.restassured.RestAssured.given;
 
-public class BaseApi {
+public class BaseTest {
 
     @Before
     public void setUp() {

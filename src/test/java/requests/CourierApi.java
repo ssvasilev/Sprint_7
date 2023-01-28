@@ -1,3 +1,5 @@
+package requests;
+
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
@@ -12,21 +14,23 @@ public class CourierApi {
     //Создание курьера
     @Step("Отправляем POST-запрос создания курьера")
     public static Response createCourier(String login, String password, String firstName) {
-        Response response =
+        Courier courier = new Courier(login,password,firstName);
+                Response response =
                 given()
                         .header("Content-type", "application/json")
-                        .body("{\"login\": \""+ login + "\", \"password\": \"" + password + "\", \"firstName\": \"" + firstName + "\"}")
+                        .body(courier)
                         .post(COURIER_ENDPOINT);
         return  response;
     }
 
     //Создание без обязательного поля
-    @Step("Отправляем POST-запрос создания без обязательного поля")
-    public static Response createCourier(String login, String firstName) {
+    @Step("Отправляем POST-запрос создания без обязательных полей")
+    public static Response createCourier(String password) {
+        Courier courier = new Courier(password);
         Response response =
                 given()
                         .header("Content-type", "application/json")
-                        .body("{\"login\": \""+ login + "\", \"firstName\": \"" + firstName + "\"}")
+                        .body(courier)
                         .post(COURIER_ENDPOINT);
         return  response;
     }
@@ -34,11 +38,12 @@ public class CourierApi {
     //Логин курьера для получения Id
     @Step("Отправляем POST-запрос авторизации пользователя для получения ID")
     public static int loginCourierId(String login, String password) {
+        Courier courier = new Courier(login, password);
                 CourierId courierResponse =
                //Логин курьером, что бы получить его id
                 given()
                         .header("Content-type", "application/json")
-                        .body("{\"login\": \""+ login + "\", \"password\": \"" + password + "\"}")
+                        .body(courier)
                         .post(COURIER_ENDPOINT + "login")
                         .as(CourierId.class);
                 return courierResponse.id;
@@ -47,11 +52,11 @@ public class CourierApi {
     //Логин курьера
     @Step("Отправляем POST-авторизации курьера")
     public static Response loginCourier(String login, String password) {
+        Courier courier = new Courier(login, password);
         Response response =
-                //Логин курьером, что бы получить его id
                 given()
                         .header("Content-type", "application/json")
-                        .body("{\"login\": \""+ login + "\", \"password\": \"" + password + "\"}")
+                        .body(courier)
                         .post(COURIER_ENDPOINT + "login");
         return response;
     }
@@ -59,12 +64,11 @@ public class CourierApi {
     //Логин курьера без одного из обязательных полей
     @Step("Отправляем POST-запрос авторизации курьера без одного поля")
     public static Response loginCourierPass(String password) {
-        String json = "{\"password\": \"" + password + "\"}";
+        Courier courier = new Courier(password);
         Response response =
-                //Логин курьером, что бы получить его id
                 given()
                         .header("Content-type", "application/json")
-                        .body(json)
+                        .body(courier)
                         .post(COURIER_ENDPOINT + "login");
         return response;
     }

@@ -4,11 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
 import io.qameta.allure.Description; // импорт Description
+import requests.BaseTest;
+import requests.CourierApi;
+
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class RestLoginCourierTest extends BaseApi {
+public class RestLoginCourierTest extends BaseTest {
 
 
     @Before
@@ -24,7 +27,8 @@ public class RestLoginCourierTest extends BaseApi {
     @Description("успешный запрос возвращает id") // описание теста
     public void restLoginSuccess() {
         Response response = CourierApi.loginCourier("AutoTestCourier","1234");
-        response.then().assertThat().body("id", notNullValue())
+        response.then().assertThat()
+                .body("id", notNullValue())
                 .and()
                 .statusCode(SC_OK);
     }
@@ -49,7 +53,7 @@ public class RestLoginCourierTest extends BaseApi {
                 .statusCode(SC_NOT_FOUND);
     }
 
-    @After
+   @After
     public void deleteTestData() {
         CourierApi.deleteCourier("AutoTestCourier", "1234");
     }

@@ -2,10 +2,13 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import io.qameta.allure.junit4.DisplayName; // импорт DisplayName
 import io.qameta.allure.Description; // импорт Description
+import requests.BaseTest;
+import requests.OrderApi;
+
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class RestGetOrdersTest extends  BaseApi{
+public class RestGetOrdersTest extends BaseTest {
 
 
         @Test
