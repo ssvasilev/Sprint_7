@@ -9,10 +9,10 @@ public class OrderApi {
 
     private final static String ORDER_ENDPOINT = "/api/v1/orders";
 @Step("Отправляем POST-запрос создания заказа")
-    public static Response createOrder(String body) {
+    public static Response createOrder(Order body) {
         Response response =
-                given()
-                        .header("Content-type", "text/plain")
+                given().log().all()
+                        .header("Content-type", "application/json")
                         .body(body)
                         .post(ORDER_ENDPOINT);
         return response;

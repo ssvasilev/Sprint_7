@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import requests.BaseTest;
+import requests.Courier;
+import requests.Order;
 import requests.OrderApi;
 
 @RunWith(Parameterized.class)
@@ -34,6 +36,7 @@ public class RestOrderCreateTest extends BaseTest {
             this.colorSet = colorSet;
         }
 
+
         // Тестовые данные
         @Parameterized.Parameters
         public static Object[][] getDataOrder() {
@@ -51,20 +54,10 @@ public class RestOrderCreateTest extends BaseTest {
     @Description("Параметры учитывают все варианты из задания") // описание теста
     public void restCreateOrder() {
         //Собираем из тестовых данных JSON, который послужит телом для запроса.
-        String json = "{" +
-                "\"firstName\":\"" + firstNameSet + "\"," +
-                "\"lastName\":\"" + lastNameSet + "\"," +
-                "\"address\":\"" + addressSet + "\"," +
-                "\"metroStation\":\"" + metroStationSet + "\"," +
-                "\"phone\":" + phoneSet + "," +
-                "\"rentTime\":" + rentTimeSet + "," +
-                "\"deliveryDate\":\"" + deliveryDateSet + "\"," +
-                "\"comment\":\"" + commentSet + "\"," +
-                "\"color\":" + colorSet +
-                "}";
+        Order order = new Order(firstNameSet,lastNameSet,addressSet,metroStationSet,phoneSet,rentTimeSet,deliveryDateSet,commentSet,colorSet);
 
         //Отправляем запрос
-                Response response = OrderApi.createOrder(json);
+                Response response = OrderApi.createOrder(order);
         //Проверяем, что в ответе содержится track и оно не пустое.
         response
                 .then().assertThat().body("track", notNullValue())

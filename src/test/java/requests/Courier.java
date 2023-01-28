@@ -7,7 +7,7 @@ public class Courier {
     private String firstName;
 
 
-    //Конструктор со всеми полями
+    //Конструктор со всеми параметрами
     public Courier(String login, String password, String firstName){
         this.login = login;
         this.password = password;
